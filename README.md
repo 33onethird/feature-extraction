@@ -7,7 +7,7 @@ This is a students project at the WU Vienna trying to replicate and improve upon
 It requires:
   * the original dataset for the replication and a new dataset for modern evaluation
   * the extraction of the same or more features from APKs
-  * recreation of the Supply Vector Machine(SVM).
+  * recreation of the Support Vector Machine(SVM).
 
 This is followed by machine learning with [**TensorFlow**](https://www.tensorflow.org/) and subsequent testing of the proficiency of the resulting program. 
 
