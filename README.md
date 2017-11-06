@@ -1,7 +1,12 @@
 # 33onethird
 Follow up to the DREBIN paper
 
-This is a students project at the WU Vienna trying to replicate the [DREBIN][1] paper.
+This is a students project at the WU Vienna trying to replicate and improve apon the [DREBIN][1] paper.
+It requires the original dataset for the replication and a new dataset for modern evaluation, the extraction of the same or more features from APKs and a recreation of the Supply Vector Machine(SVM).
+This is followed by machine learning with TensorFlow wth subsequent testing of the proficiency of the resulting program. 
+
+### Results
+Will be added when available
 
 ### Namesake
 Our repository heavily revolves around the infamous [DREBIN][1] paper, which shares the name with a beloved Leslie Nielsen character from the filmseries "The Naked Gun". The movie lives off of slapstick and puns, much like we do.
