@@ -25,8 +25,6 @@ Martín García, Alejandro & Menéndez, Héctor & Camacho, David. (2017). String
 
 Ambra Demontis, Marco Melis, Battista Biggio, Davide Maiorca, Daniel Arp, Konrad Rieck, Igino Corona, Giorgio Giacinto, Fabio Roli. (2017). Yes, Machine Learning Can Be More Secure! A Case Study on Android Malware Detection.
 
-Li, Wenjia & Ge, Jigang & Dai, Guqian. (2015). Detecting Malware for Android Platform: An SVM-based Approach.
-
 Feng, Yu & Anand, Saswat & Aiken, Alex & Dillig, Isil, (2014), Apposcopy: Semantics-Based Detection of Android Malware through Static Analysis
 
 Batyuk, Leonid & Herpich, Markus & Camtepe, Seyit & Raddatz, Karsten & Schmidt, Aubrey-Derrick & Albayrak, Sahin, (2011), Using Static Analysis for Automatic Assessment and Mitigation of Unwanted and Malicious Activities Within Android Applications
