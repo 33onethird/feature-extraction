@@ -1,9 +1,10 @@
 # 33onethird
 Follow up to the DREBIN paper
 
+---
+
 This is a students project at the WU Vienna trying to replicate and improve apon the [DREBIN][1] paper.
 It requires the original dataset for the replication and a new dataset for modern evaluation, the extraction of the same or more features from APKs and a recreation of the Supply Vector Machine(SVM).
-
 This is followed by machine learning with TensorFlow wth subsequent testing of the proficiency of the resulting program. 
 
 ### Results
