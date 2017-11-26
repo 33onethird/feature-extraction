@@ -15,7 +15,9 @@ This is followed by machine learning with [**TensorFlow**](https://www.tensorflo
 The Feature Extractor needs Java 8 or higher installed. To install it on Ubuntu:
 
 
-`sudo apt-get install oracle-java8-installer`
+`sudo apt-get install openjdk-8-jre icedtea-8-plugin
+
+`
 
 
 ### Results
