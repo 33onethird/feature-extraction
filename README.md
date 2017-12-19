@@ -18,7 +18,7 @@ The Feature Extractor needs Java 8 or higher installed. To install it on Ubuntu:
 
 To use the feature extractor, call
 
-```java -jar FeatureExtractor [input] [output]```
+```java -jar FeatureExtractor.jar [input] [output]```
 
 where `output` and `input` can be a directory of `.apk` files or and `apk` file.
 
