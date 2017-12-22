@@ -49,6 +49,7 @@ This feature lists intent names.
 #### service_receiver
 
 
+
 The second source of information is the decompiled code (.smali files). The URLs accessed by the app can be foundhere by using aregular expression, which matches every string starting with "http://" or "https://". The call tag can be extracted by checking whether a line of decompiled code contains a line from apicalls_suspicious.txt. If a line contains "Cipher" the previous line of code is also analyzed in order to determine the exact method of encryption (e.g. Cipher(AES/CBC/PKCS5Padding)). The information from jellybean_allmappings.txtis used to extract all calls present in the decompiled code and the mapping file. In a second step, all by method calls required permissions are determined using jellybean_allmappings.txt. These are the permissions actually required by the program. The permissions requested in AndroidManifest.xml CAN be used, but it is not a necessity to use all of them. The following tags are extracted from the decompiled code: 
 
 #### api_call
