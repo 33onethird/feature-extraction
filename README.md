@@ -1,6 +1,6 @@
 Feature-extraction
 ===
-This repository contains scripts to extract features from Android APKs, required for the machine learning process to detect malware
+This repository contains scripts to extract features from Android APKs, required for the [machine learning process to detect malware](https://github.com/33onethird/malware-test)
 
 Requirements
 ---
