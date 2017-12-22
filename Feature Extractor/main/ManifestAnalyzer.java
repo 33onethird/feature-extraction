@@ -12,8 +12,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 /**
- *This class parses the Manifest.xml file and extracts its features.
+ * This class parses the Manifest.xml file and extracts its features.
  *
  * @author Philipp Adam
  * @version 1.0 9/11/17
@@ -24,12 +25,13 @@ public class ManifestAnalyzer {
 	private Set<String> intents = new HashSet<String>();
 	private Set<String> serviceReceiver = new HashSet<String>();
 	private Set<String> activity = new HashSet<String>();
-	
-    /**
-     * Parses a given Manifest and stores findings in datastructures
-     *
-     * @param manifest Manifest file
-     */
+
+	/**
+	 * Parses a given Manifest and stores findings in datastructures
+	 *
+	 * @param manifest
+	 *            Manifest file
+	 */
 	public ManifestAnalyzer(File manifest) {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
@@ -47,18 +49,18 @@ public class ManifestAnalyzer {
 				Element eElement = (Element) nNode;
 				permissions.add("permission::" + eElement.getAttribute("android:name"));
 			}
-			
+
 			System.out.println("PARSING FOR FEATURES");
-			
+
 			nList = doc.getElementsByTagName("uses-feature");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
 				Element eElement = (Element) nNode;
 				features.add("feature::" + eElement.getAttribute("android:name"));
 			}
-			
+
 			System.out.println("PARSING FOR ACTIVITIES");
-			
+
 			nList = doc.getElementsByTagName("activity");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
@@ -78,10 +80,21 @@ public class ManifestAnalyzer {
 								Node currenNode = actions.item(j);
 								if (currenNode.getNodeName().equals("action")) {
 									Element currentActionElement = (Element) currenNode;
-									if (currentActionElement.getAttribute("android:name")							// get the main activity of the apk
+									if (currentActionElement.getAttribute("android:name") // get the main activity of
+																							// the apk
 											.equals("android.intent.action.MAIN")) {
 										activity.add(
-												"activity::" + getLastString(eElement.getAttribute("android:name")));		//add only the the last string, because DREBIN also did it
+												"activity::" + getLastString(eElement.getAttribute("android:name"))); // add
+																														// only
+																														// the
+																														// the
+																														// last
+																														// string,
+																														// because
+																														// DREBIN
+																														// also
+																														// did
+																														// it
 									}
 								}
 
@@ -90,9 +103,9 @@ public class ManifestAnalyzer {
 					}
 				}
 			}
-			
+
 			System.out.println("PARSING FOR INTENT-FILTERS");
-			
+
 			nList = doc.getElementsByTagName("intent-filter");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
@@ -114,9 +127,9 @@ public class ManifestAnalyzer {
 				}
 
 			}
-			
+
 			System.out.println("PARSING FOR SERVICE_RECEIVERS");
-			
+
 			nList = doc.getElementsByTagName("service");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
@@ -134,12 +147,15 @@ public class ManifestAnalyzer {
 			e.printStackTrace();
 		}
 	}
-    /**
-     * Convenience method to get the last string for something like "com.wia.ucgepcdvlsl.activity.MainActivity"
-     *
-     * @param attribute the string to split
-     * @return postSplit the last string
-     */
+
+	/**
+	 * Convenience method to get the last string for something like
+	 * "com.wia.ucgepcdvlsl.activity.MainActivity"
+	 *
+	 * @param attribute
+	 *            the string to split
+	 * @return postSplit the last string
+	 */
 	private static String getLastString(String attribute) {
 		String postSplit = attribute;
 		while (true) {
