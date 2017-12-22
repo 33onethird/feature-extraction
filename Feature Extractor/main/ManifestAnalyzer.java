@@ -84,17 +84,7 @@ public class ManifestAnalyzer {
 																							// the apk
 											.equals("android.intent.action.MAIN")) {
 										activity.add(
-												"activity::" + getLastString(eElement.getAttribute("android:name"))); // add
-																														// only
-																														// the
-																														// the
-																														// last
-																														// string,
-																														// because
-																														// DREBIN
-																														// also
-																														// did
-																														// it
+												"activity::" + getLastString(eElement.getAttribute("android:name"))); 
 									}
 								}
 
