@@ -32,7 +32,7 @@ To use the feature extractor, call
 
 where `outputDir` and `inputDir` are directories and `inputDir` contains the apps.
 
-Usage
+Workflow
 ---
 First of all, the files apicalls_suspicious.txt and jellybean_allmappings.txt are loaded and stored in data structures. The program iterates through all files in the inputDir and processes them sequentially. Every file is unpacked and decompiled using apktool.jar, which creates a folder containing the unpacked app in the working directory. This folder is deleted after the analysis. If the unpacking process takes more than 30 seconds, the process is aborted and the app will be skipped. This is necessary, because one corrupt file could prevent the analysis of all other apps in the directory.
 
