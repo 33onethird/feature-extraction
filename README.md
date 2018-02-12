@@ -22,7 +22,7 @@ Both are available in this repository.
 
 Setup
 ---
-To install the Feature Extractor on Ubuntu:
+To install the requirements on Ubuntu:
 
 ```sudo apt-get install openjdk-8-jre icedtea-8-plugin```
 
