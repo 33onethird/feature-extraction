@@ -5,7 +5,8 @@ This repository contains scripts to extract features from Android APKs, required
 Requirements
 ---
 The central component used to extract features from an app is the FeatureExtractor.jar file. 
-The program uses [apktool.jar](https://ibotpeaches.github.io/Apktool/) in its working directory to unzip the app and decompile the code.
+The program uses [apktool.jar](https://ibotpeaches.github.io/Apktool/) in its working directory to unzip the app and decompile the code. 
+We also use LibScout (https://github.com/reddr/LibScout). The compiled [LibScout.jar] as well as the logging folder (provided here) and the profiles folder from https://github.com/reddr/LibScout-Profiles must be present in the working directory.
 
 Both programs are written in Java and thereby require a Java Runtime Environment (8 or higher) installed. 
 
