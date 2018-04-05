@@ -10,7 +10,7 @@ We also use LibScout (https://github.com/reddr/LibScout). The compiled LibScout.
 
 Both programs are written in Java and thereby require a Java Runtime Environment (8 or higher) installed. 
 
-In addition to the apktool, the FeatureExtractor requires the files apicalls_suspicious.txt and jellybean_allmappings.txt to be present in 
+In addition, the FeatureExtractor requires the files apicalls_suspicious.txt and jellybean_allmappings.txt to be present in 
 the working directory. 
 #### apicalls_suspicious.txt
 contains suspicious api calls used by malware. obtained from the team of the original DREBIN paper.
