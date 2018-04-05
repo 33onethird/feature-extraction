@@ -10,7 +10,6 @@ import java.util.Set;
  * finished
  *
  * @author Philipp Adam
- * @version 2.0 12/2/18
  */
 public class ResultCollector {
 	private boolean janus = false;
@@ -102,7 +101,7 @@ public class ResultCollector {
 			write(url);
 			write(realPermission);
 			if (janus) {
-				writer.println("INVALID ZIP");
+				writer.println("janus::INVALID ZIP");
 			}
 			writer.flush();
 			writer.close();

@@ -15,6 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import APKAnalyzation.APKAnalyzer;
+import LibScout.LibScoutAnalyzer;
+import LibScout.LibScoutParser;
 
 /**
  * This is the main class, which organizes the analyzation of given .apk files.
@@ -23,20 +25,23 @@ import APKAnalyzation.APKAnalyzer;
  * new file per app, containing the extracted features
  *
  * @author Philipp Adam
- * @version 2.0 12/2/18
+ * @version 3.0 5/4/18
  */
 public class FeatureExtractor {
 	private final static File MAPPINGS = new File("jellybean_allmappings.txt");
 	private final static File SUSPICIOUSAPICALLS = new File("apicalls_suspicious.txt");
 	private final static Pattern CALLPATTERN = Pattern.compile("<(.*): .* (.+)\\(.*\\(");
 //	private static final int NUMBER_OF_UNPACKEDPRODUCERS = 4; // Number of threads unpacking APKs
-	private static final int NUMBER_OF_ANALYZERS = 8; // Number of threads analyzing unpacked APKs
+	private static final int NUMBER_OF_ANALYZERS = 6; // Number of threads analyzing unpacked APKs
+	private static final int NUMBER_OF_LIBSCOUTPARSERS = 4;
 	private static final int PACKEDQUEUE_SIZE = 1000;
 //	private static final int UNPACKEDQUEUE_SIZE = 40;
+	private final static String LIBSCOUTOUTPUT = "libscoutresults";
 
 	private static BlockingQueue<File> packedAPKs; // APKs to unpack
+	private static BlockingQueue<File> LibScoutresultFiles; // APKs to unpack
 //	private static BlockingQueue<File> unpackedAPKs; // Unpacked APKs to analyze
-	private static Collection<Thread> packedProducerCollection, unpackedProducerThreadCollection, allThreadCollection;
+	private static Collection<Thread> packedProducerCollection, unpackedProducerThreadCollection,  LibScoutAnalyzerCollection,LibScoutResultQueueCollection,LibScoutParserCollection,allThreadCollection;
 	private static HashMap<String, String> permissionMap;
 	private static Set<String> suspCallTemplate = new HashSet<String>();
 
@@ -66,12 +71,18 @@ public class FeatureExtractor {
 		if (input.isDirectory() && output.isDirectory()) {
 //			unpackedProducerThreadCollection = new ArrayList<Thread>();
 			packedProducerCollection = new ArrayList<Thread>();
+			LibScoutAnalyzerCollection = new ArrayList<Thread>();
+			LibScoutResultQueueCollection = new ArrayList<Thread>();
+			LibScoutParserCollection = new ArrayList<Thread>();
 			allThreadCollection = new ArrayList<Thread>();
 			packedAPKs = new LinkedBlockingDeque<File>(PACKEDQUEUE_SIZE);
+			LibScoutresultFiles = new LinkedBlockingDeque<File>(PACKEDQUEUE_SIZE);
 //			unpackedAPKs = new LinkedBlockingDeque<File>(UNPACKEDQUEUE_SIZE);
 			createAndStartPackedQueue(input);
+			createAndStartLibScoutAnalyzer(input);
 //			createAndStartUnpackedProducers();
 			createAndStartConsumers(output);
+
 
 			for (Thread t : allThreadCollection) {
 				try {
@@ -81,8 +92,83 @@ public class FeatureExtractor {
 				}
 			}
 		}
-
+		
+		createAndStartLibScoutResultQueue();
+		createAndStartLibScoutParser(output);
+		deleteFolder(new File(LIBSCOUTOUTPUT));
 		System.out.println("----------------------- ANALYSIS COMPLETED-----------------------");
+	}
+
+	/**
+	 * Deletes a given folder
+	 *
+	 * @param folder
+	 *            dir to delete
+	 */
+	private static  void deleteFolder(File folder) {
+		File[] files = folder.listFiles();
+		if (files != null) { // some JVMs return null for empty dirs
+			for (File f : files) {
+				if (f.isDirectory()) {
+					deleteFolder(f);
+				} else {
+					f.delete();
+				}
+			}
+		}
+		folder.delete();
+	}
+	
+	/**
+	 * Creates  new instances of LibScoutParser, which parses the LibScout logfiles and merges them with the feature vector file.
+	 *
+	 * @param output
+	 *            Output directory
+	 */
+	private static void createAndStartLibScoutParser(File output) {
+		for (int i = 0; i < NUMBER_OF_LIBSCOUTPARSERS; i++) {
+		LibScoutParser parser = new LibScoutParser(LibScoutresultFiles, output);
+		Thread producerThread = new Thread(parser, "LibScout Parser"+i);
+		LibScoutParserCollection.add(producerThread);
+		producerThread.start();
+		try {
+			producerThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	}
+
+	/**
+	 * Creates a new instance of resultQueuer, which adds the LibScout result files to a queue
+	 *
+	 */
+	private static void createAndStartLibScoutResultQueue() {
+		FileQueuer resultQueuer = new FileQueuer(LIBSCOUTOUTPUT, LibScoutresultFiles);
+		Thread producerThread = new Thread(resultQueuer, "Resultqueue");
+		LibScoutResultQueueCollection.add(producerThread);
+		producerThread.start();
+		try {
+			producerThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	/**
+	 * Create a new instances of LibScoutAnalyzer, which tasks LibScout with the analyzation of the apps
+	 *
+	 * @param input
+	 *            input directory
+	 */
+	private static void createAndStartLibScoutAnalyzer(File input) {
+		LibScoutAnalyzer analyzer = new LibScoutAnalyzer(input, LIBSCOUTOUTPUT);
+		Thread producerThread = new Thread(analyzer, "LibScout analyzer ");
+		LibScoutAnalyzerCollection.add(producerThread);
+		producerThread.start();
+
+	allThreadCollection.addAll(LibScoutAnalyzerCollection);
+		
 	}
 
 	/**
@@ -93,12 +179,13 @@ public class FeatureExtractor {
 	 *            Input directory
 	 */
 	private static void createAndStartPackedQueue(File input) throws IOException {
-		PackedProducer packedProducer = new PackedProducer(input.getCanonicalPath(), packedAPKs);
+		FileQueuer packedProducer = new FileQueuer(input.getCanonicalPath(), packedAPKs);
 		Thread producerThread = new Thread(packedProducer, "PACKEDPRODUCER");
 		packedProducerCollection.add(producerThread);
 		producerThread.start();
 		allThreadCollection.addAll(packedProducerCollection);
 	}
+	
 
 	/**
 	 * Creates several new instances of UnpackedProducer, which unpack files from
@@ -160,6 +247,19 @@ public class FeatureExtractor {
 		return false;
 	}
 	/**
+	 * Called from LibScoutParser, if there is more to parse 
+	 * 
+     * @return If there is more to parse
+	 */
+	public static boolean isResultQueuerAlive() {
+		for (Thread t : LibScoutResultQueueCollection) {
+			if (t.isAlive())
+				return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Reads the jellybean_allmappings.txt file and parses it to build a map with
 	 * the functionality to get all required permissions (value) per API call (key)
 	 *
@@ -205,5 +305,10 @@ public class FeatureExtractor {
 		scannerMappings.close();
 		return permissionMap;
 	}
+
+
+
+
+
 
 }

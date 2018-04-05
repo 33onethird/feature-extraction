@@ -16,7 +16,6 @@ import APKAnalyzation.ResultCollector;
  * for its features. The results are passed to its ResultCollector.
  * 
  * @author Philipp Adam
- * @version 2.0 12/2/18
  */
 public class SmaliConsumer implements Runnable {
 	// Regex patterns for URLs

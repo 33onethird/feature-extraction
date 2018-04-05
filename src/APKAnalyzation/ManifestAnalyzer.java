@@ -16,7 +16,6 @@ import org.w3c.dom.NodeList;
  * This class parses the Manifest.xml file and extracts its features.
  *
  * @author Philipp Adam
- * @version 2.0 12/2/18
  */
 public class ManifestAnalyzer {
 	private Set<String> permissions = new HashSet<String>();
@@ -42,7 +41,7 @@ public class ManifestAnalyzer {
 			Document doc = dBuilder.parse(manifest);
 			doc.getDocumentElement().normalize();
 
-			System.out.println("PARSING FOR PERMISSIONS");
+			//System.out.println("PARSING FOR PERMISSIONS");
 
 			NodeList nList = doc.getElementsByTagName("uses-permission");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -51,7 +50,7 @@ public class ManifestAnalyzer {
 				permissions.add("permission::" + eElement.getAttribute("android:name"));
 			}
 
-			System.out.println("PARSING FOR FEATURES");
+			//System.out.println("PARSING FOR FEATURES");
 
 			nList = doc.getElementsByTagName("uses-feature");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -60,7 +59,7 @@ public class ManifestAnalyzer {
 				features.add("feature::" + eElement.getAttribute("android:name"));
 			}
 
-			System.out.println("PARSING FOR ACTIVITIES");
+			//System.out.println("PARSING FOR ACTIVITIES");
 
 			nList = doc.getElementsByTagName("activity");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -95,7 +94,7 @@ public class ManifestAnalyzer {
 				}
 			}
 
-			System.out.println("PARSING FOR INTENT-FILTERS");
+			//System.out.println("PARSING FOR INTENT-FILTERS");
 
 			nList = doc.getElementsByTagName("intent-filter");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -119,7 +118,7 @@ public class ManifestAnalyzer {
 
 			}
 
-			System.out.println("PARSING FOR SERVICE_RECEIVERS");
+			//System.out.println("PARSING FOR SERVICE_RECEIVERS");
 
 			nList = doc.getElementsByTagName("service");
 			for (int temp = 0; temp < nList.getLength(); temp++) {

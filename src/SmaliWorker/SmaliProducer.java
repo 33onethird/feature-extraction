@@ -7,7 +7,6 @@ import java.util.concurrent.BlockingQueue;
  * queue.
  *
  * @author Philipp Adam
- * @version 2.0 12/2/18
  */
 public class SmaliProducer implements Runnable {
 

@@ -15,7 +15,6 @@ import APKAnalyzation.ResultCollector;
  * SmaliConsumer instances, which analyze the files.
  *
  * @author Philipp Adam
- * @version 2.0 12/2/18
  */
 public class SmaliController {
 
@@ -53,7 +52,7 @@ public class SmaliController {
 			}
 		}
 
-		System.out.println("SMALIController finished");
+		//System.out.println("SMALIController finished");
 	}
 
 	/**

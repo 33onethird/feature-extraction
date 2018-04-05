@@ -16,7 +16,6 @@ import SmaliWorker.SmaliController;
  * This thread organizes the analyzation of an unpacked APK
  *
  * @author Philipp Adam
- * @version 2.0 12/2/18
  */
 public class APKAnalyzer implements Runnable {
 	private File XMLManifest;
