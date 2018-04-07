@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import APKAnalyzation.APKAnalyzer;
 import LibScout.LibScoutAnalyzer;
 import LibScout.LibScoutParser;
+import ReputationParser.ReputationLoader;
 
 /**
  * This is the main class, which organizes the analyzation of given .apk files.
@@ -25,7 +26,7 @@ import LibScout.LibScoutParser;
  * new file per app, containing the extracted features
  *
  * @author Philipp Adam
- * @version 3.0 5/4/18
+ * @version 3.1 7/4/18
  */
 public class FeatureExtractor {
 	private final static File MAPPINGS = new File("jellybean_allmappings.txt");
@@ -41,8 +42,9 @@ public class FeatureExtractor {
 	private static BlockingQueue<File> packedAPKs; // APKs to unpack
 	private static BlockingQueue<File> LibScoutresultFiles; // APKs to unpack
 //	private static BlockingQueue<File> unpackedAPKs; // Unpacked APKs to analyze
-	private static Collection<Thread> packedProducerCollection, unpackedProducerThreadCollection,  LibScoutAnalyzerCollection,LibScoutResultQueueCollection,LibScoutParserCollection,allThreadCollection;
+	private static Collection<Thread> packedProducerCollection,  LibScoutAnalyzerCollection,LibScoutResultQueueCollection,LibScoutParserCollection,allThreadCollection;
 	private static HashMap<String, String> permissionMap;
+	public static HashSet<String> maliciousURLs= new HashSet<String>();
 	private static Set<String> suspCallTemplate = new HashSet<String>();
 
 	/**
@@ -56,6 +58,8 @@ public class FeatureExtractor {
 		System.out.println("Usage: java -jar FeatureExtractor.jar <Input Dir> <Output Dir for feature files>");
 		try {
 			permissionMap = buildPermissionMap(MAPPINGS);
+			new ReputationLoader(maliciousURLs);
+			System.out.println(maliciousURLs.size()+" entries in the Reputation DB");
 			Scanner scannerCalls = new Scanner(SUSPICIOUSAPICALLS);
 			while (scannerCalls.hasNextLine()) {
 				suspCallTemplate.add(scannerCalls.nextLine());

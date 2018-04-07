@@ -22,6 +22,7 @@ public class ResultCollector {
 	private Set<String> calls = new HashSet<String>();
 	private Set<String> url = new HashSet<String>();
 	private Set<String> realPermission = new HashSet<String>();
+	private Set<String> reputationMatches = new HashSet<String>();
 	private int finishedConsumers = 0;
 	private int totalConsumers;
 	private PrintWriter writer;
@@ -80,6 +81,10 @@ public class ResultCollector {
 	public synchronized void setJanus() {
 		this.janus = true;
 	}
+	public synchronized void addReputationMatches(Set<String> reputationMatches) {
+		this.reputationMatches=reputationMatches;
+		
+	}
 
 	/**
 	 * Called by a SmaliConsumer thread to report that it has finished. If all
@@ -100,6 +105,7 @@ public class ResultCollector {
 			write(calls);
 			write(url);
 			write(realPermission);
+			write(reputationMatches);
 			if (janus) {
 				writer.println("janus::INVALID ZIP");
 			}
@@ -140,5 +146,7 @@ public class ResultCollector {
 		}
 		folder.delete();
 	}
+
+
 
 }

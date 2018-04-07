@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import APKAnalyzation.ResultCollector;
+import Main.FeatureExtractor;
 
 /**
  * This thread takes a file of decompiled code from the queue and analyzes it
@@ -31,6 +32,7 @@ public class SmaliConsumer implements Runnable {
 	private Set<String> calls = new HashSet<String>();
 	private Set<String> url = new HashSet<String>();
 	private Set<String> realPermission = new HashSet<String>();
+	private Set<String> reputationMatches = new HashSet<String>();
 	private HashMap<String, String> permissionMap;
 	private ResultCollector results;
 	private SmaliController controller;
@@ -68,10 +70,12 @@ public class SmaliConsumer implements Runnable {
 							}
 						}
 					}
+					checkURLReputation();
 					results.addAPICALLSResults(apiCalls);
 					results.addCALLSResults(calls);
 					results.addURLResults(url);
 					results.addREALPERMISSIONResults(realPermission);
+					results.addReputationMatches(reputationMatches);
 					results.consumerFinished();
 					// System.out.println(Thread.currentThread().getName()+" finished");
 					return;
@@ -149,6 +153,26 @@ public class SmaliConsumer implements Runnable {
 			}
 		}
 	}
+	
+	/**
+	 * Looks up every found URL in the Reputation DB and checks for matches
+	 *
+	 */
+	private void checkURLReputation() {
+		HashSet<String> reputation = FeatureExtractor.maliciousURLs;
+		for(String link:url) {
+			link = link.substring(5);
+			//System.out.println("Looking up "+link);
+			for(String entry : reputation) 
+				if(link.contains(entry)&&entry.length()>3) {
+					System.out.println("------------REPUTATION MATCH------"+link+" "+entry);
+					reputationMatches.add("ReputationDB match::"+entry);
+				}
+			}
+		}
+		
+	
+
 	/**
 	 * Convenience method to split a string of many permissions to a list e.g.
 	 * "android.permission.INTERNET-android.permission.RECEIVE_BOOT_COMPLETED" to
