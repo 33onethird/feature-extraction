@@ -7,6 +7,7 @@ Requirements
 The central component used to extract features from an app is the FeatureExtractor.jar file. 
 The program uses [apktool.jar](https://ibotpeaches.github.io/Apktool/) in its working directory to unzip the app and decompile the code. 
 We also use LibScout (https://github.com/reddr/LibScout). The compiled [LibScout.jar](https://github.com/reddr/LibScout), [android-x.jar](https://github.com/reddr/LibScout/tree/master/lib) as well as the logging folder (provided here) and the [profiles folder](https://github.com/reddr/LibScout-Profiles) from  must be present in the working directory.
+The file config.txt is used to toggle the extraction of our extended features. If you do not want them to be used, simply remove the entry from the config.txt file.
 
 Both programs are written in Java and thereby require a Java Runtime Environment (8 or higher) installed. 
 
