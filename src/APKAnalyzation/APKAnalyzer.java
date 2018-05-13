@@ -79,8 +79,10 @@ public class APKAnalyzer implements Runnable {
 					featureFile = new File(output + "/" + input.getName() + ".txt");
 					results = new ResultCollector(featureFile, unpackedAPK);
 					fileLocation = Paths.get(input.getAbsolutePath());
+
 					try {
-						// Check the first 4 bytes if they no not indicate a Zip file it may be a janus
+						if(FeatureExtractor.UseJanus()) {
+						// Check the first 4 bytes if they do not indicate a Zip file it may be a janus
 						// exploit
 						// https://www.guardsquare.com/en/blog/new-android-vulnerability-allows-attackers-modify-apps-without-affecting-their-signatures
 						byte[] data = Files.readAllBytes(fileLocation);
@@ -94,8 +96,7 @@ public class APKAnalyzer implements Runnable {
 							System.out.println("INVALID ZIP FILE - Janus exploit?");
 						}
 
-						// System.out.println(smaliDir.getCanonicalPath());
-
+						}
 						new ManifestAnalyzer(XMLManifest, results);
 						new SmaliController(smaliDir.getCanonicalPath(), permissionMap, suspCallTemplate, results);
 

@@ -70,12 +70,16 @@ public class SmaliConsumer implements Runnable {
 							}
 						}
 					}
-					checkURLReputation();
+					if(FeatureExtractor.UseReputationDB()) {
+						checkURLReputation();
+						results.addReputationMatches(reputationMatches);
+					}
+
 					results.addAPICALLSResults(apiCalls);
 					results.addCALLSResults(calls);
 					results.addURLResults(url);
 					results.addREALPERMISSIONResults(realPermission);
-					results.addReputationMatches(reputationMatches);
+
 					results.consumerFinished();
 					// System.out.println(Thread.currentThread().getName()+" finished");
 					return;
@@ -165,7 +169,7 @@ public class SmaliConsumer implements Runnable {
 			//System.out.println("Looking up "+link);
 			for(String entry : reputation) 
 				if(link.contains(entry)&&entry.length()>3) {
-					System.out.println("------------REPUTATION MATCH------"+link+" "+entry);
+					System.out.println("------------REPUTATION MATCH: "+link+" and "+entry);
 					reputationMatches.add("ReputationDB match::"+entry);
 				}
 			}

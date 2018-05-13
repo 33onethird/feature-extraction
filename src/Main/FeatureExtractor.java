@@ -21,7 +21,7 @@ import ReputationParser.ReputationLoader;
 
 /**
  * This is the main class, which organizes the analyzation of given .apk files.
- * It requires apktool.jar, jellybean_allmappings.txt and
+ * It requires config.txt, apktool.jar, jellybean_allmappings.txt and
  * apicalls_suspicious.txt"to be placed in the same directory. The output is a
  * new file per app, containing the extracted features
  *
@@ -38,6 +38,12 @@ public class FeatureExtractor {
 	private static final int PACKEDQUEUE_SIZE = 1000;
 //	private static final int UNPACKEDQUEUE_SIZE = 40;
 	private final static String LIBSCOUTOUTPUT = "libscoutresults";
+	private final static String CONFIG = "config.txt";
+	private static boolean useLibScout=false;
+	private static boolean useReputationDB=false;
+	private static boolean useJanus=false;
+
+
 
 	private static BlockingQueue<File> packedAPKs; // APKs to unpack
 	private static BlockingQueue<File> LibScoutresultFiles; // APKs to unpack
@@ -57,9 +63,13 @@ public class FeatureExtractor {
 	public static void main(String[] args) throws IOException {
 		System.out.println("Usage: java -jar FeatureExtractor.jar <Input Dir> <Output Dir for feature files>");
 		try {
+			loadConfig();
 			permissionMap = buildPermissionMap(MAPPINGS);
-			new ReputationLoader(maliciousURLs);
-			System.out.println(maliciousURLs.size()+" entries in the Reputation DB");
+			if(useReputationDB) {
+				new ReputationLoader(maliciousURLs);
+				System.out.println(maliciousURLs.size()+" entries in the Reputation DB");
+			}
+
 			Scanner scannerCalls = new Scanner(SUSPICIOUSAPICALLS);
 			while (scannerCalls.hasNextLine()) {
 				suspCallTemplate.add(scannerCalls.nextLine());
@@ -83,9 +93,13 @@ public class FeatureExtractor {
 			LibScoutresultFiles = new LinkedBlockingDeque<File>(PACKEDQUEUE_SIZE);
 //			unpackedAPKs = new LinkedBlockingDeque<File>(UNPACKEDQUEUE_SIZE);
 			createAndStartPackedQueue(input);
-			createAndStartLibScoutAnalyzer(input);
 //			createAndStartUnpackedProducers();
 			createAndStartConsumers(output);
+			
+			if(useLibScout) {
+				createAndStartLibScoutAnalyzer(input);
+			}
+
 
 
 			for (Thread t : allThreadCollection) {
@@ -96,11 +110,32 @@ public class FeatureExtractor {
 				}
 			}
 		}
-		
+		if(useLibScout) {
 		createAndStartLibScoutResultQueue();
 		createAndStartLibScoutParser(output);
 		deleteFolder(new File(LIBSCOUTOUTPUT));
+		}
 		System.out.println("----------------------- ANALYSIS COMPLETED-----------------------");
+	}
+
+	private static void loadConfig() throws FileNotFoundException {
+		Scanner scanner = new Scanner(new File(CONFIG));
+		while (scanner.hasNextLine()) {
+			String lineFromFile = scanner.nextLine();
+				if(lineFromFile.equals("Janus")) {
+					 useJanus=true;
+					 System.out.println("USING JANUS");
+				}
+				if(lineFromFile.equals("ReputationDB")) {
+					useReputationDB=true;
+					 System.out.println("USING REPUTATIONDB");
+				}
+				if(lineFromFile.equals("LibScout")) {
+					useLibScout=true;
+					 System.out.println("USING LIBSCOUT");
+				}
+		}
+		scanner.close();
 	}
 
 	/**
@@ -309,10 +344,16 @@ public class FeatureExtractor {
 		scannerMappings.close();
 		return permissionMap;
 	}
+	public static boolean UseLibScout() {
+		return useLibScout;
+	}
 
+	public static boolean UseReputationDB() {
+		return useReputationDB;
+	}
 
-
-
-
+	public static boolean UseJanus() {
+		return useJanus;
+	}
 
 }
